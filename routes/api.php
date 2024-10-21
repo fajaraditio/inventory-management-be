@@ -10,4 +10,15 @@ Route::group(['prefix' => 'auth', 'name' => 'api.auth.'], function () {
     Route::post('login', [LoginController::class, 'login'])->name('login');
 });
 
-// JsonApiRoute::server('v1')->prefix('v1')->resources(fn($server) => $server->resource('posts', JsonApiController::class)->readOnly());
+Route::get('/user', function () {
+    return auth()->user()->name;
+})
+    ->middleware('auth:sanctum');
+
+JsonApiRoute::server('v1')
+    ->prefix('v1')
+    ->resources(
+        function ($server) {
+            $server->resource('product-categories', JsonApiController::class);
+        }
+    );
