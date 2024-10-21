@@ -15,7 +15,7 @@ class LoginController extends Controller
 
         $user = User::where('email', $validatedRequest['email'])->first();
 
-        $token = $user->createToken('pat')->plainTextToken;
+        $token = $user->createToken('pat', ['*'], now()->addDay())->plainTextToken;
 
         return response()->json([
             'message' => 'User authenticated',
