@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\B2BProjectController;
 use App\Http\Controllers\Api\V1\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,10 +11,9 @@ Route::group(['prefix' => 'auth', 'name' => 'api.auth.'], function () {
     Route::post('login', [LoginController::class, 'login'])->name('login');
 });
 
-Route::get('/user', function () {
-    return auth()->user()->name;
-})
-    ->middleware('auth:sanctum');
+Route::group(['prefix' => 'v1'], function () {
+    Route::get('b2b-project/check-similarity', [B2BProjectController::class, 'checkSimilarityAll'])->name('v1.b2b-project.check-similarity');
+});
 
 JsonApiRoute::server('v1')
     ->prefix('v1')
