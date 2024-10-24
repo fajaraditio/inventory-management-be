@@ -28,7 +28,7 @@ class B2BProjectController extends Controller
 
         $projects = B2BProject::all();
 
-        $totalVariables = count($validated) - 1; // subtract with 1 because lat, long only return geo similarity
+        $totalVariables = (!empty($request->latitude) || !empty($request->longitude)) ? count($validated) - 1 : count($validated); // subtract with 1 if lat / long is filled, because it will return only geo similarities variables
         $similarities = [];
 
         foreach ($projects as $project) {
@@ -40,8 +40,8 @@ class B2BProjectController extends Controller
             $subDistrictSimilarity      = CosineSimilarity::checkPercentage($project->sub_district_name, $request->sub_district_name);
             $geoSimilarity              = HaversineFormula::checkGeoSimilarity($project->latitude, $project->longitude, $request->latitude, $request->longitude);
 
-            $totalAmountSimilarity      = (min($project->total_amount, $request->total_amount) / max($project->total_amount, $request->total_amount)) * 100;
-            $mergeSimilarity            = ($projectNameSimilarity + $detailAddressSimilarity + $provinceNameSimilarity + $cityNameSimilarity + $districtSimilarity + $subDistrictSimilarity + $totalAmountSimilarity + $geoSimilarity) / $totalVariables;
+            $totalAmountSimilarity      = (min($project->total_amount, $request->total_amount) / max($project->total_amount, $request->total_amount)) * 100; // smaller value formula
+            $mergeSimilarity            = ($projectNameSimilarity + $detailAddressSimilarity + $provinceNameSimilarity + $cityNameSimilarity + $districtSimilarity + $subDistrictSimilarity + $totalAmountSimilarity + $geoSimilarity) / $totalVariables; // haversine formula
 
             $similarities[] = array_merge($project->toArray(), [
                 'total_similarity' => $mergeSimilarity,
