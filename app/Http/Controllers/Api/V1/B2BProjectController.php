@@ -11,6 +11,34 @@ use Illuminate\Http\Request;
 
 class B2BProjectController extends Controller
 {
+    public function fetchAll(Request $request)
+    {
+        $projects = B2BProject::paginate();
+
+        return response()->json(
+            array_merge(
+                [
+                    'status'    => 'ok',
+                    'message'   => 'B2B Projects Fetched',
+                ],
+                $projects->toArray(),
+            )
+        );
+    }
+
+    public function fetchId($id)
+    {
+        $projects = B2BProject::find($id);
+
+        return response()->json(
+            [
+                'status'    => 'ok',
+                'message'   => 'B2B Projects Fetched',
+                'data'      => $projects,
+            ],
+        );
+    }
+
     public function checkSimilarityAll(Request $request)
     {
         $validated = $request->validate([

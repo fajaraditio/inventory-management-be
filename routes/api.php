@@ -13,7 +13,11 @@ Route::group(['prefix' => 'auth', 'name' => 'api.auth.'], function () {
 });
 
 Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
-    Route::get('b2b-project/check-similarity', [B2BProjectController::class, 'checkSimilarityAll'])->name('b2b-project.check-similarity');
+    Route::group(['prefix' => '/b2b-project', 'as' => 'b2b-project.'], function () {
+        Route::get('/',                 [B2BProjectController::class, 'fetchAll'])->name('fetch');
+        Route::get('/{id}',             [B2BProjectController::class, 'fetchId'])->name('fetch-id');
+        Route::get('/check-similarity', [B2BProjectController::class, 'checkSimilarityAll'])->name('check-similarity');
+    });
 
     Route::group(['prefix' => '/b2b-project-regional', 'as' => 'b2b-project-regional.'], function () {
         Route::get('province',     [B2BProjectRegionalController::class, 'fetchProvince'])->name('province');
@@ -22,7 +26,7 @@ Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
         Route::get('sub-district', [B2BProjectRegionalController::class, 'fetchSubDistrict'])->name('city');
     });
 
-    Route::group(['prefix' => 'project-report', 'as' => 'project-report.'], function () {
+    Route::group(['prefix' => '/project-report', 'as' => 'project-report.'], function () {
         Route::get('/',         [ProjectReportController::class, 'fetch'])->name('fetch');
         Route::get('/{id}',     [ProjectReportController::class, 'fetchId'])->name('fetch-id');
         Route::post('/',        [ProjectReportController::class, 'create'])->name('create');
